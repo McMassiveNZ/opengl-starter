@@ -5,6 +5,7 @@ namespace ogl_starter
 class NullOpenGLImpl final : public OpenGL
 {
 public:
+	NullOpenGLImpl() = default;
 	~NullOpenGLImpl() override = default;
 	NullOpenGLImpl(const NullOpenGLImpl&) = delete;
 	NullOpenGLImpl& operator=(const NullOpenGLImpl&) = delete;
