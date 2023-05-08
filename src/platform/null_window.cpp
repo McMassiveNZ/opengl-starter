@@ -15,7 +15,8 @@ public:
 	NullWindowImpl& operator=(const NullWindowImpl&) = delete;
 
 	void PumpMessages() override {}
-	bool ShouldClose() override { return false; }
+	bool ShouldClose() const override { return false; }
+	void* GetNativeHandle() const override { return nullptr; }
 
 };
 
