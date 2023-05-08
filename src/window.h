@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace starter_window
+namespace ogl_starter
 {
 
 struct WindowCreateParams
@@ -19,9 +19,16 @@ class Window
 public:
 	virtual ~Window() = default;
 	virtual void PumpMessages() = 0;
-	virtual bool ShouldClose() = 0;
+	virtual bool ShouldClose() const = 0;
+	virtual void* GetNativeHandle() const = 0;
+
+	template< typename T >
+	T NativeHandle() const
+	{
+		return static_cast<T>(GetNativeHandle());
+	}
 };
 
 }
 
-std::unique_ptr<starter_window::Window> swCreateWindow(starter_window::WindowCreateParams params);
+std::unique_ptr<ogl_starter::Window> oglsCreateWindow(ogl_starter::WindowCreateParams params);

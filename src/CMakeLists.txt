@@ -1,30 +1,36 @@
-set(current_target starter_window)
+set(current_target opengl-starter)
 
 set(SOURCE_FILES)
-set(STARTER_WINDOW_SRC
+set(OPENGL_STARTER_SRC
     main.cpp
     window.h
+    opengl.h
 )
-source_group("" FILES ${STARTER_WINDOW_SRC})
+source_group("" FILES ${OPENGL_STARTER_SRC})
 
 if(MSVC)
 set(PLATFORM_SRC
     platform/win32_window.cpp
+    platform/win32_opengl.cpp
 )
 else()
 set(PLATFORM_SRC
     platform/null_window.cpp
+    platform/null_opengl.cpp
 )
 endif()
 source_group(platform FILES ${PLATFORM_SRC})
 
 list(APPEND SOURCE_FILES ${PLATFORM_SRC})
-list(APPEND SOURCE_FILES ${STARTER_WINDOW_SRC})
+list(APPEND SOURCE_FILES ${OPENGL_STARTER_SRC})
 
 add_executable(
     ${current_target}
     ${SOURCE_FILES}
 )
+
+target_include_directories(${current_target} PUBLIC ${CMAKE_SOURCE_DIR}/external)
+target_link_libraries(${current_target} PUBLIC opengl32.lib)
 
 if( ENABLE_ALL_REASONABLE_WARNINGS )
     MESSAGE("-- Additional Warnings Enabled")

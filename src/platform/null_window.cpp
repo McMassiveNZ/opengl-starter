@@ -1,6 +1,6 @@
 #include "../window.h"
 
-namespace starter_window
+namespace ogl_starter
 {
 
 class NullWindowImpl final : public Window
@@ -21,8 +21,8 @@ public:
 
 } // namespace starter_window
 
-std::unique_ptr<starter_window::Window> swCreateWindow(starter_window::WindowCreateParams)
+std::unique_ptr<ogl_starter::Window> oglsCreateWindow(ogl_starter::WindowCreateParams)
 {
-	auto result = std::make_unique<starter_window::NullWindowImpl>();
+	auto result = std::make_unique<ogl_starter::NullWindowImpl>();
 	return result;
 }

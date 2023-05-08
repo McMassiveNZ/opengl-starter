@@ -14,39 +14,34 @@ static LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPA
 {
 	switch (message)
 	{
-		case WM_DESTROY:
+		case WM_CLOSE:
 		{
 			PostQuitMessage(0);
-			return 0;
+			break;
 		}
 
-		case WM_PAINT:
-		{
-			PAINTSTRUCT ps = {};
-			HDC hdc = BeginPaint(window, &ps);
-			FillRect(hdc, &ps.rcPaint, reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1));
-			EndPaint(window, &ps);
-			return 0;
-		}
+		default:
+			return DefWindowProc(window, message, wParam, lParam);
 	}
-	return DefWindowProc(window, message, wParam, lParam);
+
+	return 0;
 }
 
-namespace starter_window
+namespace ogl_starter
 {
 
 class Win32WindowImpl final : public Window
 {
 public:
 	Win32WindowImpl();
-	~Win32WindowImpl() override = default;
 
 	Win32WindowImpl(const Win32WindowImpl&) = delete;
 	Win32WindowImpl& operator=(const Win32WindowImpl&) = delete;
 
 	bool init(WindowCreateParams params);
 	void PumpMessages() override;
-	bool ShouldClose() override;
+	bool ShouldClose() const override;
+	void* GetNativeHandle() const override;
 
 	HINSTANCE hInstance;
 	HWND hWnd;
@@ -62,15 +57,13 @@ Win32WindowImpl::Win32WindowImpl()
 
 bool Win32WindowImpl::init(WindowCreateParams params)
 {
-	const char className[] = "Win32WindowImpl";
-
 	WNDCLASSEX wc = {};
-
 	wc.cbSize = sizeof(WNDCLASSEX);
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc = WindowProc;
 	wc.hInstance = hInstance;
-	wc.lpszClassName = className;
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.lpszClassName = "WindowClass";
 
 	if (RegisterClassEx(&wc) == NULL)
 	{
@@ -78,51 +71,55 @@ bool Win32WindowImpl::init(WindowCreateParams params)
 		return false;
 	}
 
-	HWND window = CreateWindowEx(
-		0,
-		className,
+	hWnd = CreateWindow(
+		wc.lpszClassName,
 		params.name,
 		WS_OVERLAPPEDWINDOW,
 		params.x, params.y, params.width, params.height,
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
 		hInstance,
-		NULL);
+		nullptr);
 
-	if (window == NULL)
+	if (hWnd == nullptr)
 	{
-		MessageBox(nullptr, "Call to CreateWindow failed", NULL, MB_OK);
+		MessageBox(nullptr, "Call to CreateWindow failed", nullptr, MB_OK);
 		return false;
 	}
 
-	ShowWindow(window, SW_SHOW);
+	ShowWindow(hWnd, SW_SHOW);
 	return true;
 }
 
 void Win32WindowImpl::PumpMessages()
 {
-	MSG message = {};
-	if (GetMessage(&message, NULL, 0, 0) != 0)
+	MSG msg = {};
+	while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
-		TranslateMessage(&message);
-		DispatchMessage(&message);
-	}
-	else
-	{
-	// GetMessage returned WM_QUIT
-		m_close = true;
+		if (msg.message == WM_QUIT)
+		{
+			m_close = true;
+		}
+
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
 	}
 }
 
-bool Win32WindowImpl::ShouldClose()
+bool Win32WindowImpl::ShouldClose() const
 {
 	return m_close;
 }
-} // namespace starter_window
 
-std::unique_ptr<starter_window::Window> swCreateWindow(starter_window::WindowCreateParams params)
+void* Win32WindowImpl::GetNativeHandle() const
 {
-	auto result = std::make_unique<starter_window::Win32WindowImpl>();
+	return static_cast<void*>(hWnd);
+}
+} // namespace ogl_starter
+
+std::unique_ptr<ogl_starter::Window> oglsCreateWindow(ogl_starter::WindowCreateParams params)
+{
+	auto result = std::make_unique<ogl_starter::Win32WindowImpl>();
 	if (result->init(params) == false)
 	{
 		result = nullptr;
