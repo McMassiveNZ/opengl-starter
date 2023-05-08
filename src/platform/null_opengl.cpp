@@ -19,7 +19,7 @@ public:
 };
 } // namespace ogl_starter
 
-std::unique_ptr<ogl_starter::Window> oglsCreateWindow(ogl_starter::OpenGLCreateParams)
+std::unique_ptr<ogl_starter::OpenGL> oglsCreateOpenGL(ogl_starter::OpenGLCreateParams)
 {
 	auto result = std::make_unique<ogl_starter::NullOpenGLImpl>();
 	return result;
