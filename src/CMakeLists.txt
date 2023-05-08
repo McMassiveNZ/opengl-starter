@@ -30,7 +30,10 @@ add_executable(
 )
 
 target_include_directories(${current_target} PUBLIC ${CMAKE_SOURCE_DIR}/external)
-target_link_libraries(${current_target} PUBLIC opengl32.lib)
+
+if(MSVC)
+	target_link_libraries(${current_target} PUBLIC opengl32.lib)
+endif()
 
 if( ENABLE_ALL_REASONABLE_WARNINGS )
     MESSAGE("-- Additional Warnings Enabled")
