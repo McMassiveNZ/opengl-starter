@@ -18,11 +18,6 @@ set(CMAKE_SCRIPTS_DIR ${CMAKE_CURRENT_LIST_DIR}/scripts/cmake)
 include(${CMAKE_SCRIPTS_DIR}/compilerwarnings.cmake)
 include(${CMAKE_SCRIPTS_DIR}/sanitizers.cmake)
 include(${CMAKE_SCRIPTS_DIR}/staticanalysis.cmake)
-
-if (ENABLE_TESTS)
-    message("-- Unit Testing Enabled")
-    enable_testing()
-    add_subdirectory(test)
-endif()
+include(${CMAKE_SCRIPTS_DIR}/cpm.cmake)
 
 add_subdirectory(src)
