@@ -29,7 +29,7 @@ add_executable(
     ${SOURCE_FILES}
 )
 
-target_include_directories(${current_target} PUBLIC ${CMAKE_SOURCE_DIR}/external)
+target_include_directories(${current_target} PUBLIC . ${CMAKE_SOURCE_DIR}/external)
 
 if(MSVC)
 	target_link_libraries(${current_target} PUBLIC opengl32.lib)

@@ -1,26 +1,29 @@
-#include "../opengl.h"
+#include "opengl.h"
 
 namespace ogl_starter
 {
-class NullOpenGLImpl final : public OpenGL
+struct NullOpenGLImpl final
 {
-public:
-	NullOpenGLImpl() = default;
-	~NullOpenGLImpl() override = default;
-	NullOpenGLImpl(const NullOpenGLImpl&) = delete;
-	NullOpenGLImpl& operator=(const NullOpenGLImpl&) = delete;
-
-	NullOpenGLImpl(NullOpenGLImpl&&) = default;
-	NullOpenGLImpl& operator=(NullOpenGLImpl&&) = default;
-
-	void ClearBuffers() override {}
-	void SwapBuffers() override {}
-	void DrawScene() override {}
 };
+
+void ClearBuffers(const NullOpenGLImpl&)
+{
+}
+
+void Present(const NullOpenGLImpl&)
+{
+}
+
+void DrawScene(const NullOpenGLImpl&)
+{
+}
+
+void Destroy(const NullOpenGLImpl&)
+{
+}
 } // namespace ogl_starter
 
-std::unique_ptr<ogl_starter::OpenGL> oglsCreateOpenGL(ogl_starter::OpenGLCreateParams)
+ogl_starter::OpenGL oglsCreateOpenGL(ogl_starter::OpenGLCreateParams)
 {
-	auto result = std::make_unique<ogl_starter::NullOpenGLImpl>();
-	return result;
+	return ogl_starter::NullOpenGLImpl{};
 }

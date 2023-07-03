@@ -14,19 +14,20 @@ auto main() -> int
 	});
 
 	auto renderer = oglsCreateOpenGL({
-		.nativeWindowHandle = window->GetNativeHandle(), 
+		.nativeWindowHandle = GetNativeHandle(window), 
 		.versionMajor = 4, 
 		.versionMinor = 6
 	});
 		
-	while (!window->ShouldClose())
+	while (!ShouldClose(window))
 	{
-		window->PumpMessages();
+		PumpMessages(window);
 
-		renderer->ClearBuffers();
-		renderer->DrawScene();
-		renderer->SwapBuffers();
+		ClearBuffers(renderer);
+		DrawScene(renderer);
+		Present(renderer);
 	}
 
+	Destroy(renderer);
 	return 0;
 }
